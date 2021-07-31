@@ -10,7 +10,7 @@ public class TriggerWallAnimation : MonoBehaviour
 
     private void OnEnable() 
     {
-        transform.position = new Vector3(0,2, -10);
+        transform.position = new Vector3(0, 0.8f, -10);
         
         transform.DOLocalMoveZ(10, 1f).OnComplete(SetPassive).SetDelay(.5f); // SetDelay is for my unity hub. Because my editor crashes on the starting of playing game. That's why I delayed.
     }

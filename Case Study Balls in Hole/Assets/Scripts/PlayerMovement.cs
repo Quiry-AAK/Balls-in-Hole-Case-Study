@@ -1,38 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] float deadZone = 50f;
+    [SerializeField] Rigidbody rb;
+    [SerializeField] Transform graphicTransform; // It's for shake object
+
+    [SerializeField] float moveSpeed;
+    [SerializeField] float deadZone = 50f; // Swipe deadzone
 
     bool isGameStarted = false;
+    bool isMoving = false;
 
-    int whichDirection; // 0 : Down , 1 : Left , 2 : Up, 3 :  Right
+    RaycastHit stopWallRaycast;
+
+    Vector3 direction;
+
+    float scaleCheck;
+
+
     private void Update()
     {
         #region  For Unity Hub
 
-        if (Input.anyKey)
+        if (Input.anyKey && !isMoving)
         {
             if (Input.GetKey(KeyCode.S))
             {
-                whichDirection = 0;
+                direction = Vector3.back;
             }
 
-            else if (Input.GetKey(KeyCode.A))
+            else if (Input.GetKey(KeyCode.A) && !isMoving)
             {
-                whichDirection = 1;
+                direction = Vector3.left;
             }
 
-            else if (Input.GetKey(KeyCode.W))
+            else if (Input.GetKey(KeyCode.W) && !isMoving)
             {
-                whichDirection = 2;
+                direction = Vector3.forward;
             }
 
-            else if (Input.GetKey(KeyCode.D))
+            else if (Input.GetKey(KeyCode.D) && !isMoving)
             {
-                whichDirection = 3;
+                direction = Vector3.right;
             }
 
             else
@@ -41,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
                 return;
             }
 
-            Move();
+            CheckMovingIfMovingIsNeeded();
         }
 
         #endregion
@@ -51,37 +63,69 @@ public class PlayerMovement : MonoBehaviour
         {
             Touch touch = Input.GetTouch(0);
 
-            if (touch.deltaPosition.y > -deadZone)
+            if (touch.deltaPosition.y > -deadZone && !isMoving)
             {
-                whichDirection = 0;
+                direction = Vector3.back;
             }
 
-            else if (touch.deltaPosition.x > -deadZone)
+            else if (touch.deltaPosition.x > -deadZone && !isMoving)
             {
-                whichDirection = 1;
+                direction = Vector3.left;
             }
 
-            else if (touch.deltaPosition.y > deadZone)
+            else if (touch.deltaPosition.y > deadZone && !isMoving)
             {
-                whichDirection = 2;
+                direction = Vector3.forward;
             }
 
-            else if (touch.deltaPosition.x > deadZone)
+            else if (touch.deltaPosition.x > deadZone && !isMoving)
             {
-                whichDirection = 3;
+                direction = Vector3.right;
             }
 
-            Move();
+            CheckMovingIfMovingIsNeeded();
 
         }
         #endregion
     }
 
-    void Move()
+    void CheckMovingIfMovingIsNeeded()
     {
-        StartGame();
+        Physics.Raycast(transform.position,
+                         direction, out stopWallRaycast, 100f); // Determine which wall will stop the ball or hole
 
-        // TODO : Movement Codes
+        if(Vector3.Distance(transform.position, stopWallRaycast.point) < 0.5f) // If the ball is near the wall which is wanted by player, there is no need to go moving phase
+        {
+            isMoving = false;
+        }
+
+        else
+        {
+            
+            isMoving = true;
+            rb.constraints = RigidbodyConstraints.FreezePositionY;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        
+        if (isMoving)
+        {
+            if (Vector3.Distance(transform.position, stopWallRaycast.point) > 0.5f)
+            {
+                StartGame();
+                rb.velocity = moveSpeed * direction * Time.fixedDeltaTime;
+            }
+
+            else
+            {
+                graphicTransform.DOShakeScale(0.05f);
+                isMoving = false;
+                rb.constraints = RigidbodyConstraints.FreezeAll; // Not to have any bump physic effect
+                stopWallRaycast = new RaycastHit(); // To absorb some confusions
+            }
+        }
     }
 
     void StartGame()

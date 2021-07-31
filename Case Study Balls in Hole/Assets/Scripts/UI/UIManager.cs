@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         SlideToOne();
+        SetLevelTxt();
     }
 
     void SlideToOne()
