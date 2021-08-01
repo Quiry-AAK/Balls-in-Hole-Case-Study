@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Text levelTxt;
     [SerializeField] GameObject inGameUI;
     [SerializeField] GameObject beforeStartingUI;
+    [SerializeField] GameObject resultUI;
 
     private void Awake()
     {
@@ -51,11 +52,48 @@ public class UIManager : MonoBehaviour
 
     public void StartGameSettingsForUI()
     {
-        beforeStartingUI.SetActive(false);
-        inGameUI.SetActive(true);
+        if (GameManager.Instance.IsGameReadyToStart)
+        {
+            beforeStartingUI.SetActive(false);
+            inGameUI.SetActive(true);
 
-        CanvasGroup canvas = inGameUI.GetComponent<CanvasGroup>();
-        canvas.alpha = 0;
-        canvas.DOFade(1, 0.4f);
+            CanvasGroup canvas = inGameUI.GetComponent<CanvasGroup>();
+            canvas.alpha = 0;
+            canvas.DOFade(1, 0.4f);
+        }
+    }
+
+    public void FinishGameSettingsForUI(int totalCoins, int takenCoins)
+    {
+        inGameUI.SetActive(false);
+        resultUI.SetActive(true);
+        // TODO : Dotween canvas
+
+        
+
+
+
+
+        int resultPercent = 1;
+
+        if(totalCoins != 0)
+        {
+            resultPercent = takenCoins / totalCoins;
+
+            if(resultPercent >= 0 && resultPercent <= 0.33f)
+            {
+                // Not Bad and 1 star
+            }
+
+            else if(resultPercent > 0.33f && resultPercent <= 0.66f)
+            {
+                // Good and 2 star
+            }
+
+            else
+            {
+                // Awesome and 3 star
+            }
+        }
     }
 }
