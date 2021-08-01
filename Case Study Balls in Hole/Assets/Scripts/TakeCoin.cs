@@ -10,15 +10,15 @@ public class TakeCoin : MonoBehaviour
     {
         if(other.CompareTag("Coin"))
         {
-            Debug.Log("aa");
-            GameManager.Instance.TakenCoins++;
+             GameManager.Instance.TakenCoins++;
 
-            takeCoinFX.SetActive(true);
-            takeCoinFX.transform.localScale = Vector3.one * 0.17f;
-            takeCoinFX.transform.position = other.transform.position;
-            takeCoinFX.transform.DOScale(0.25f, 0.3f).SetEase(Ease.InOutBack).OnComplete(CloseFX);
+            // takeCoinFX.SetActive(true);
+            // takeCoinFX.transform.localScale = Vector3.one * 0.17f;
+            // takeCoinFX.transform.position = other.transform.position;
+            // takeCoinFX.transform.DOScale(0.25f, 0.3f).SetEase(Ease.InOutBack).OnComplete(CloseFX);
             
-            Destroy(other.transform.parent.gameObject);
+            // Destroy(other.transform.parent.gameObject);
+            GameManager.Instance.CoinFxAndDestroy(other.gameObject);
         }
 
     }

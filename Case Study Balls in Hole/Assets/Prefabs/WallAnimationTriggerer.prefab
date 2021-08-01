@@ -44,7 +44,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 14, y: 1, z: 1}
+  m_Size: {x: 14, y: 3, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &8862662562950150230
 Rigidbody:
@@ -74,4 +74,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac80353c1cf30d545931fa6ce585d36f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WallTag: Wall
+  WhichLayer: 10

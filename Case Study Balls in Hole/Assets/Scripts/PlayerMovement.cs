@@ -25,8 +25,6 @@ public class PlayerMovement : MonoBehaviour
     bool isMoving = false;
     bool doStartMoving = false;
 
-    float scaleCheck;
-
     private void Update()
     {
         #region  For Unity Hub
@@ -92,7 +90,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void CheckMovingIfMovingIsNeeded()
     {
-        if (GameManager.Instance.IsGameReadyToStart && direction != Vector3.zero)
+        if (GameManager.Instance.IsGameReadyToStart && direction != Vector3.zero && !GameManager.Instance.isGameFinished)
         {
             Physics.Raycast(transform.position,
                              direction, out stopWallRaycast, 100f, ~13);
@@ -107,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     doStartMoving = false;
                     if (isItBall)
-                        graphicTransform.DOShakeScale(0.3f);
+                        graphicTransform.DOScale(1.2f, 0.07f).OnComplete(ScaleToOneAgain);
                 }
             }
 
@@ -123,6 +121,11 @@ public class PlayerMovement : MonoBehaviour
                 Move();
             }
         }
+    }
+
+    void ScaleToOneAgain()
+    {
+        graphicTransform.DOScale(1, 0.07f);
     }
 
     private void FixedUpdate()

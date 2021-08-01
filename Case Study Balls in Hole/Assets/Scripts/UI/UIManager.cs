@@ -12,9 +12,13 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] Slider handSlider;
     [SerializeField] Text levelTxt;
+    [SerializeField] Text complimentTxt;
     [SerializeField] GameObject inGameUI;
     [SerializeField] GameObject beforeStartingUI;
     [SerializeField] GameObject resultUI;
+    [SerializeField] ParticleSystem starFx;
+    [SerializeField] CanvasGroup[] stars;
+
 
     private void Awake()
     {
@@ -67,33 +71,73 @@ public class UIManager : MonoBehaviour
     {
         inGameUI.SetActive(false);
         resultUI.SetActive(true);
-        // TODO : Dotween canvas
 
-        
+        resultUI.GetComponent<CanvasGroup>().DOFade(1, 0.2f);
 
-
-
-
-        int resultPercent = 1;
 
         if(totalCoins != 0)
         {
-            resultPercent = takenCoins / totalCoins;
+            int resultPercent = takenCoins / totalCoins;
 
             if(resultPercent >= 0 && resultPercent <= 0.33f)
             {
-                // Not Bad and 1 star
+                Result("NOT BAD", 1);
             }
 
             else if(resultPercent > 0.33f && resultPercent <= 0.66f)
             {
-                // Good and 2 star
+                Result("GOOD", 2);
             }
 
             else
             {
-                // Awesome and 3 star
+                Result("AWESOME", 3);
             }
         }
+
+        else
+        {
+            Result("AWESOME", 3);
+        }
+    }
+
+    void Result(string text, int count)
+    {
+        complimentTxt.text = "AWESOME";
+        StartCoroutine(ScaleAndFxStars(count));
+    }
+
+    IEnumerator ScaleAndFxStars(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            yield return  new WaitForSeconds(0.5f);
+            stars[i].DOFade(1, 0.5f);
+            FxStars(stars[i].GetComponent<RectTransform>());
+        }
+    }
+
+    void FxStars(RectTransform starTransform)
+    {
+        starFx.gameObject.SetActive(true);
+        starFx.transform.position = starTransform.position;
+        starFx.Play();
+
+        Invoke("CloseFx",3);
+    }
+
+    void CloseFx()
+    {
+        starFx.gameObject.SetActive(false);
+    }
+
+    public void RestartBtn()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void GoNextLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

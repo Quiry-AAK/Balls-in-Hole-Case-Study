@@ -6,7 +6,6 @@ using DG.Tweening;
 public class Ball : MonoBehaviour
 {
     [SerializeField] Transform hole;
-    [SerializeField] GameObject ballGraphic;
     public bool isCaptured = false;
     
 

@@ -7,6 +7,8 @@ public class TriggerWallAnimation : MonoBehaviour
 {
     [Range (10,11)] public int WhichLayer;
 
+    Vector3 endScale;
+
     private void OnEnable() 
     {
         transform.position = new Vector3(0, 0.45f, -10);
@@ -22,10 +24,14 @@ public class TriggerWallAnimation : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) 
     {
-        Debug.Log(other.gameObject.layer);
         if(other.gameObject.layer == WhichLayer)
         {
-            other.transform.DOScale(1f, 1f);
+            if(WhichLayer == 12)
+                endScale = new Vector3(1,10,1);
+            else
+                endScale =  Vector3.one;
+
+            other.transform.DOScale(endScale, 1f);
         }
     }
 
