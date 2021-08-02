@@ -103,7 +103,7 @@ public class UIManager : MonoBehaviour
 
     void Result(string text, int count)
     {
-        complimentTxt.text = "AWESOME";
+        complimentTxt.text = text;
         StartCoroutine(ScaleAndFxStars(count));
     }
 

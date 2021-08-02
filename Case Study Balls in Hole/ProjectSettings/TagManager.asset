@@ -9,6 +9,7 @@ TagManager:
   - Ball
   - Hole
   - Coin
+  - Trap
   layers:
   - Default
   - TransparentFX
@@ -24,8 +25,8 @@ TagManager:
   - FirstScale
   - LastScale
   - Hole
-  - 
-  - 
+  - Obstacle
+  - WallAnimation
   - 
   - 
   - 

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2593859938417858185}
   - component: {fileID: 2593859938417858187}
   - component: {fileID: 2593859938417858186}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Particle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4813,7 +4813,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2593859940243187992}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Gold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4858,7 +4858,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3670803612585694131, guid: 14b41f8ea548c984db262d3caaaa3d41, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 3670803612585694131, guid: 14b41f8ea548c984db262d3caaaa3d41, type: 3}
       propertyPath: m_TagString
@@ -4870,7 +4870,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3670978646444802615, guid: 14b41f8ea548c984db262d3caaaa3d41, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 3670978646444802615, guid: 14b41f8ea548c984db262d3caaaa3d41, type: 3}
       propertyPath: m_IsActive

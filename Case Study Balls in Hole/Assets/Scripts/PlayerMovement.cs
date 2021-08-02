@@ -14,6 +14,9 @@ public class PlayerMovement : MonoBehaviour
     public float movingDeadZone;
 
     [Space]
+    [SerializeField] LayerMask maskLayer;
+
+    [Space]
     [SerializeField] bool isItBall;
 
 
@@ -93,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
         if (GameManager.Instance.IsGameReadyToStart && direction != Vector3.zero && !GameManager.Instance.isGameFinished)
         {
             Physics.Raycast(transform.position,
-                             direction, out stopWallRaycast, 100f, ~13);
+                             direction, out stopWallRaycast, 100f, ~maskLayer);
 
             if (Vector3.Distance(transform.position, stopWallRaycast.point) < movingDeadZone) // If the ball/hole is near the wall which is wanted by player, there is no need to go moving phase
             {
@@ -120,6 +123,11 @@ public class PlayerMovement : MonoBehaviour
 
                 Move();
             }
+        }
+
+        else
+        {
+            rb.velocity = Vector3.zero;
         }
     }
 

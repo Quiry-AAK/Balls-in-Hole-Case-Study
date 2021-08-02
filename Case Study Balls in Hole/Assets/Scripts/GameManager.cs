@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject triggerWall;
 
 
-    [Header ("Level Props")]
+    [Header("Level Props")]
     public Color WallColor;
     public Color GroundColor;
     [SerializeField] List<GameObject> playerBalls;
@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool isGameFinished = false;
     [HideInInspector] public int TakenCoins;
     [HideInInspector] public int TotalCoins;
+
+    [Space]
+    [SerializeField] GameObject failTxt;
 
 
     GameObject[] coins;
@@ -61,23 +64,33 @@ public class GameManager : MonoBehaviour
 
         if (capturedBalls >= balls.Length)
         {
-            FinishGame();
+            FinishGame(true);
         }
     }
 
-    void FinishGame()
+    public void FinishGame(bool succesfully)
     {
         isGameFinished = true;
-        Invoke("UIFinish", 1);
 
-        if (TakenCoins != TotalCoins)
+        if (succesfully)
         {
-            GameObject[] remainedCoins = GameObject.FindGameObjectsWithTag("Coin");
+            Invoke("UIFinish", 1);
 
-            StartCoroutine(DestroyCoinsInOrder(remainedCoins));
+            if (TakenCoins != TotalCoins)
+            {
+                GameObject[] remainedCoins = GameObject.FindGameObjectsWithTag("Coin");
+
+                StartCoroutine(DestroyCoinsInOrder(remainedCoins));
+            }
+
+            TriggerWallActive(12);
         }
 
-        TriggerWallActive(12);
+        else
+        {
+            failTxt.gameObject.SetActive(true);
+        }
+
     }
 
     #region  Coin
@@ -97,7 +110,8 @@ public class GameManager : MonoBehaviour
             GameObject tempTakeCoinFx = Instantiate(TakeCoinFx);
             tempTakeCoinFx.transform.localScale = Vector3.one * 0.17f;
             tempTakeCoinFx.transform.position = whichCoin.transform.position;
-            tempTakeCoinFx.transform.DOScale(0.25f, 0.3f).SetEase(Ease.InOutBack).OnComplete(CloseFX);
+            tempTakeCoinFx.transform.DOScale(0.25f, 0.3f).SetEase(Ease.InOutBack);
+            Destroy(tempTakeCoinFx, 0.3f);
         }
 
         else
@@ -140,12 +154,11 @@ public class GameManager : MonoBehaviour
         {
             float ballYHolder = item.transform.position.y;
             item.transform.position = new Vector3(item.transform.position.x, 50, item.transform.position.z);
-            item.transform.DOMoveY(ballYHolder, 0.7f);
+            item.transform.DOMoveY(ballYHolder, 1f);
         }
 
-        float holeYHolder = playerHole.transform.position.y;
-        playerHole.transform.position = new Vector3(playerHole.transform.position.x, -9.5f, playerHole.transform.position.z);
-        playerHole.transform.DOMoveY(holeYHolder, 0.7f);
+        playerHole.transform.localScale = Vector3.zero;
+        playerHole.transform.DOScale(1, 1f).SetEase(Ease.OutBounce);
 
 
         CoinAnimation();

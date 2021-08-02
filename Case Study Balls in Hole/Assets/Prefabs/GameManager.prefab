@@ -56,3 +56,4 @@ MonoBehaviour:
   isGameFinished: 0
   TakenCoins: 0
   TotalCoins: 0
+  failTxt: {fileID: 0}
