@@ -10,7 +10,6 @@ public class PlayerMovement : MonoBehaviour
 
     [Space]
     [SerializeField] float moveSpeed;
-    [SerializeField] float swipeDeadZone = 50f; // Swipe deadzone
     public float movingDeadZone;
 
     [Space]
@@ -27,68 +26,110 @@ public class PlayerMovement : MonoBehaviour
     bool isGameStarted = false;
     bool isMoving = false;
     bool doStartMoving = false;
+    bool tap,swipeLeft,swipeRight, swipeUp, swipeDown;
+    bool isDragging = false;
+    
+    Vector2 startTouch, swipeDelta;
+    float swipeDeadZone = 75f; 
+    
 
     private void Update()
     {
         #region  For Unity Hub
 
-        if (Input.anyKey && !isMoving)
+        if (!isMoving)
         {
-            if (Input.GetKey(KeyCode.S))
+            if(Input.GetMouseButtonDown(0))
             {
-                Direction = Vector3.back;
+                tap = true;
+                startTouch = Input.mousePosition;
+                isDragging = true;
             }
 
-            else if (Input.GetKey(KeyCode.A) && !isMoving)
+            else if(Input.GetMouseButtonUp(0))
             {
-                Direction = Vector3.left;
-            }
-
-            else if (Input.GetKey(KeyCode.W) && !isMoving)
-            {
-                Direction = Vector3.forward;
-            }
-
-            else if (Input.GetKey(KeyCode.D) && !isMoving)
-            {
-                Direction = Vector3.right;
-            }
-
-            else
-            {
-                Debug.LogError("Use [W,A,S,D] for moving.");
-                return;
+                isDragging = false;
+                Reset();
             }
         }
 
         #endregion
 
         #region  Swipe Control
-        if (Input.touchCount > 0)
+        tap = swipeLeft = swipeRight = swipeUp = swipeDown;
+
+        if(Input.touches.Length > 0 && !isMoving)
         {
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.deltaPosition.y > -swipeDeadZone && !isMoving)
+            if(Input.touches[0].phase == TouchPhase.Began)
             {
-                Direction = Vector3.back;
+                tap = true;
+                startTouch = Input.touches[0].position;
+                isDragging = true;
             }
 
-            else if (touch.deltaPosition.x > -swipeDeadZone && !isMoving)
+            else if(Input.touches[0].phase == TouchPhase.Ended || Input.touches[0].phase == TouchPhase.Canceled)
             {
-                Direction = Vector3.left;
-            }
-
-            else if (touch.deltaPosition.y > swipeDeadZone && !isMoving)
-            {
-                Direction = Vector3.forward;
-            }
-
-            else if (touch.deltaPosition.x > swipeDeadZone && !isMoving)
-            {
-                Direction = Vector3.right;
+                isDragging = false;
+                Reset();
             }
         }
         #endregion
+
+        swipeDelta = Vector2.zero;
+
+        if(isDragging)
+        {
+            if(Input.touches.Length > 0)
+            {
+                swipeDelta = Input.touches[0].position - startTouch;
+            }
+            
+            else if(Input.GetMouseButton(0))
+            {
+                swipeDelta = (Vector2)Input.mousePosition - startTouch;
+            }
+        }
+
+        if(swipeDelta.magnitude > swipeDeadZone && !isMoving)
+        {
+            float x = swipeDelta.x;
+            float y = swipeDelta.y;
+
+            if(Mathf.Abs(x) > Mathf.Abs(y))
+            {
+                if(x < 0)
+                {
+                    swipeLeft = true;
+                    Direction = Vector3.left;
+                }
+
+                else
+                {
+                    swipeRight = true;
+                    Direction = Vector3.right;
+                }
+            }
+
+            else
+            {
+                if(y < 0)
+                {
+                    swipeDown = true;
+                    Direction = Vector3.back;
+                }
+
+                else
+                {
+                    swipeUp = true;
+                    Direction = Vector3.forward;
+                }
+            }
+        }
+    }
+
+    private void Reset() 
+    {
+        startTouch = swipeDelta = Vector2.zero;
     }
 
     public void CheckMovingIfMovingIsNeeded()
@@ -96,7 +137,7 @@ public class PlayerMovement : MonoBehaviour
         if (GameManager.Instance.IsGameReadyToStart && Direction != Vector3.zero && !GameManager.Instance.isGameFinished)
         {
             if (Physics.Raycast(transform.position,
-                             Direction, out stopWallRaycast, 100f, ~maskLayer))
+                            Direction, out stopWallRaycast, 100f, ~maskLayer))
             {
 
                 if (Vector3.Distance(transform.position, stopWallRaycast.point) < movingDeadZone) // If the ball/hole is near the wall which is wanted by player, there is no need to go moving phase

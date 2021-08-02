@@ -8932,6 +8932,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ball
       objectReference: {fileID: 0}
+    - target: {fileID: 8892539078263142977, guid: 5bc7ddc62d822464d8a6cf1887b0e556, type: 3}
+      propertyPath: swipeDeadZone
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 8892539078263142988, guid: 5bc7ddc62d822464d8a6cf1887b0e556, type: 3}
       propertyPath: hole
       value: 
@@ -20644,9 +20648,33 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 735853828}
     - target: {fileID: 3360422771469352334, guid: ee70b0aa3f439234cbc5866432038b9c, type: 3}
+      propertyPath: WallColor.b
+      value: 0.83722013
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360422771469352334, guid: ee70b0aa3f439234cbc5866432038b9c, type: 3}
+      propertyPath: WallColor.g
+      value: 0.33161268
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360422771469352334, guid: ee70b0aa3f439234cbc5866432038b9c, type: 3}
+      propertyPath: WallColor.r
+      value: 0.8679245
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360422771469352334, guid: ee70b0aa3f439234cbc5866432038b9c, type: 3}
       propertyPath: triggerWall
       value: 
       objectReference: {fileID: 1465756804}
+    - target: {fileID: 3360422771469352334, guid: ee70b0aa3f439234cbc5866432038b9c, type: 3}
+      propertyPath: GroundColor.b
+      value: 0.44313723
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360422771469352334, guid: ee70b0aa3f439234cbc5866432038b9c, type: 3}
+      propertyPath: GroundColor.g
+      value: 0.46344963
+      objectReference: {fileID: 0}
+    - target: {fileID: 3360422771469352334, guid: ee70b0aa3f439234cbc5866432038b9c, type: 3}
+      propertyPath: GroundColor.r
+      value: 0.972549
+      objectReference: {fileID: 0}
     - target: {fileID: 3360422771469352334, guid: ee70b0aa3f439234cbc5866432038b9c, type: 3}
       propertyPath: beforeStartingUI
       value: 
@@ -20773,6 +20801,10 @@ PrefabInstance:
       propertyPath: confettiFx
       value: 
       objectReference: {fileID: 301026105}
+    - target: {fileID: 4132718654474521281, guid: dd7414052ef7ed142a7828ef27e07fb1, type: 3}
+      propertyPath: swipeDeadZone
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 4132718654474521282, guid: dd7414052ef7ed142a7828ef27e07fb1, type: 3}
       propertyPath: takeCoinFX
       value: 
@@ -20837,6 +20869,10 @@ PrefabInstance:
     - target: {fileID: 8892539078263142976, guid: 5bc7ddc62d822464d8a6cf1887b0e556, type: 3}
       propertyPath: m_Name
       value: Ball
+      objectReference: {fileID: 0}
+    - target: {fileID: 8892539078263142977, guid: 5bc7ddc62d822464d8a6cf1887b0e556, type: 3}
+      propertyPath: swipeDeadZone
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8892539078263142988, guid: 5bc7ddc62d822464d8a6cf1887b0e556, type: 3}
       propertyPath: hole
