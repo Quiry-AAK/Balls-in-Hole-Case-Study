@@ -22,7 +22,7 @@ public class PlayerMovement : MonoBehaviour
 
     RaycastHit stopWallRaycast;
 
-    Vector3 direction;
+    public Vector3 Direction;
 
     bool isGameStarted = false;
     bool isMoving = false;
@@ -36,22 +36,22 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.S))
             {
-                direction = Vector3.back;
+                Direction = Vector3.back;
             }
 
             else if (Input.GetKey(KeyCode.A) && !isMoving)
             {
-                direction = Vector3.left;
+                Direction = Vector3.left;
             }
 
             else if (Input.GetKey(KeyCode.W) && !isMoving)
             {
-                direction = Vector3.forward;
+                Direction = Vector3.forward;
             }
 
             else if (Input.GetKey(KeyCode.D) && !isMoving)
             {
-                direction = Vector3.right;
+                Direction = Vector3.right;
             }
 
             else
@@ -70,22 +70,22 @@ public class PlayerMovement : MonoBehaviour
 
             if (touch.deltaPosition.y > -swipeDeadZone && !isMoving)
             {
-                direction = Vector3.back;
+                Direction = Vector3.back;
             }
 
             else if (touch.deltaPosition.x > -swipeDeadZone && !isMoving)
             {
-                direction = Vector3.left;
+                Direction = Vector3.left;
             }
 
             else if (touch.deltaPosition.y > swipeDeadZone && !isMoving)
             {
-                direction = Vector3.forward;
+                Direction = Vector3.forward;
             }
 
             else if (touch.deltaPosition.x > swipeDeadZone && !isMoving)
             {
-                direction = Vector3.right;
+                Direction = Vector3.right;
             }
         }
         #endregion
@@ -93,41 +93,50 @@ public class PlayerMovement : MonoBehaviour
 
     public void CheckMovingIfMovingIsNeeded()
     {
-        if (GameManager.Instance.IsGameReadyToStart && direction != Vector3.zero && !GameManager.Instance.isGameFinished)
+        if (GameManager.Instance.IsGameReadyToStart && Direction != Vector3.zero && !GameManager.Instance.isGameFinished)
         {
-            Physics.Raycast(transform.position,
-                             direction, out stopWallRaycast, 100f, ~maskLayer);
-
-            if (Vector3.Distance(transform.position, stopWallRaycast.point) < movingDeadZone) // If the ball/hole is near the wall which is wanted by player, there is no need to go moving phase
+            if (Physics.Raycast(transform.position,
+                             Direction, out stopWallRaycast, 100f, ~maskLayer))
             {
-                isMoving = false;
-                rb.constraints = RigidbodyConstraints.FreezeAll; // Not to have any bump physic effect
-                stopWallRaycast = new RaycastHit(); // To absorb some confusions
 
-                if (doStartMoving)
+                if (Vector3.Distance(transform.position, stopWallRaycast.point) < movingDeadZone) // If the ball/hole is near the wall which is wanted by player, there is no need to go moving phase
                 {
-                    doStartMoving = false;
-                    if (isItBall)
-                        graphicTransform.DOScale(1.2f, 0.07f).OnComplete(ScaleToOneAgain);
+                    isMoving = false;
+                    rb.constraints = RigidbodyConstraints.FreezeAll; // Not to have any bump physic effect
+
+                    if (isItBall && stopWallRaycast.collider.gameObject.layer == 16)
+                        GetComponent<Ball>().CollideGlass(stopWallRaycast.collider.gameObject, stopWallRaycast.transform.position);
+
+                    stopWallRaycast = new RaycastHit(); // To absorb some confusions
                 }
-            }
 
-            else
-            {
-                isMoving = true;
-                doStartMoving = true;
-                if (isItBall)
-                    rb.constraints = RigidbodyConstraints.FreezePositionY;
                 else
-                    rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
+                {
+                    isMoving = true;
+                    doStartMoving = true;
+                    if (isItBall)
+                        rb.constraints = RigidbodyConstraints.FreezePositionY;
+                    else
+                        rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
 
-                Move();
+                    Move();
+                }
             }
         }
 
         else
         {
+            isMoving = false;
             rb.velocity = Vector3.zero;
+
+            rb.constraints = RigidbodyConstraints.FreezeAll; // Not to have any bump physic effect
+
+            if (doStartMoving)
+            {
+                doStartMoving = false;
+                if (isItBall)
+                    graphicTransform.DOScale(1.2f, 0.07f).OnComplete(ScaleToOneAgain);
+            }
         }
     }
 
@@ -153,6 +162,11 @@ public class PlayerMovement : MonoBehaviour
     void Move()
     {
         StartGame();
-        rb.velocity = moveSpeed * direction * Time.fixedDeltaTime;
+        rb.velocity = moveSpeed * Direction * Time.fixedDeltaTime;
+
+        if (isItBall)
+        {
+            rb.rotation = Quaternion.Euler(rb.rotation.x + (Direction.x * 50f), rb.rotation.y + (Direction.y * 50f), rb.rotation.z + (Direction.z * 50f));
+        }
     }
 }

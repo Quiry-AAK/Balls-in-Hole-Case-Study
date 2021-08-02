@@ -77,7 +77,7 @@ public class UIManager : MonoBehaviour
 
         if(totalCoins != 0)
         {
-            int resultPercent = takenCoins / totalCoins;
+            float resultPercent = (float)takenCoins / (float)totalCoins;
 
             if(resultPercent >= 0 && resultPercent <= 0.33f)
             {

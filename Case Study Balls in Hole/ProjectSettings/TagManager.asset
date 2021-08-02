@@ -10,6 +10,7 @@ TagManager:
   - Hole
   - Coin
   - Trap
+  - Glass
   layers:
   - Default
   - TransparentFX
@@ -27,7 +28,7 @@ TagManager:
   - Hole
   - Obstacle
   - WallAnimation
-  - 
+  - Glass
   - 
   - 
   - 

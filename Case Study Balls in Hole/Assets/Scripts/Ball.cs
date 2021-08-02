@@ -21,6 +21,7 @@ public class Ball : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) 
     {
+        
         if(other.CompareTag("Hole"))
         {
             isCaptured = true;
@@ -35,12 +36,7 @@ public class Ball : MonoBehaviour
 
         else if(other.CompareTag("Trap"))
         {
-            distortionFx.gameObject.SetActive(true);
-            distortionFx.transform.position = transform.position;
-            ParticleSystem.MainModule main = distortionFx.main;
-            main.startColor = new ParticleSystem.MinMaxGradient(Color.black, Color.blue);
-            distortionFx.Play();
-            Invoke("CloseFx", 0.5f);
+            ActiveDistortionFx(Color.black, Color.blue, transform.position);
 
             GameManager.Instance.FinishGame(false);
             Destroy(gameObject, 0.05f);
@@ -48,9 +44,26 @@ public class Ball : MonoBehaviour
 
     }
 
+    void ActiveDistortionFx(Color minGradient, Color maxGradient, Vector3 where)
+    {
+        distortionFx.gameObject.SetActive(true);
+            distortionFx.transform.position = where;
+            ParticleSystem.MainModule main = distortionFx.main;
+            main.startColor = new ParticleSystem.MinMaxGradient(minGradient, maxGradient);
+            distortionFx.Play();
+            Invoke("CloseFx", 0.5f);
+    }
+
     void CloseFx()
     {
         distortionFx.gameObject.SetActive(false);
+    }
+
+    public void CollideGlass(GameObject glass, Vector3 fxPos)
+    {
+        GetComponent<PlayerMovement>().Direction = Vector3.zero;
+        ActiveDistortionFx(Color.white, Color.gray, fxPos);
+        Destroy(glass.gameObject, 0.05f);
     }
 
 }
